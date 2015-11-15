@@ -1,0 +1,13 @@
+{
+  "name": "node-tcp-proxy",
+  "description": "A simple TCP proxy built using Node.js",
+  "license": "MIT",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git", 
+    "url": "https://github.com/tewarid/node-tcp-proxy.git"
+  },
+  "dependencies": {
+    "optimist": "latest"
+  }
+}
