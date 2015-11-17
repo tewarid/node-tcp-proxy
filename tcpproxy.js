@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var util = require('util');
 var net = require("net");
  
