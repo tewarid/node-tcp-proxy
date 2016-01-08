@@ -6,5 +6,5 @@ port1 is where socat listens for incoming requests. host and port2 are the host 
 
 To achieve the same with node-tcp-proxy
 ```
-node tcpproxy.js  --proxyPort [port] --serviceHost [host] --servicePort [port]
+node tcpproxy.js  --proxyPort [port1] --serviceHost [host] --servicePort [port2]
 ```
