@@ -8,3 +8,14 @@ To achieve the same with node-tcp-proxy
 ```
 node tcpproxy.js  --proxyPort [port1] --serviceHost [host] --servicePort [port2]
 ```
+
+To create a proxy in your own code
+```javascript
+var proxy = require("./tcp-proxy.js");
+var newProxy = proxy.createProxy(8080, "hostname", 10080);
+```
+
+To end the proxy
+```javascript
+newProxy.end();
+```
