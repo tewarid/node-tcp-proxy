@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var proxy = require("./tcpProxy.js");
+var proxy = require("./tcp-proxy.js");
  
 var argv = require("optimist")
     .usage('Usage: $0 --proxyPort [port] --serviceHost [host] --servicePort [port]')

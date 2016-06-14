@@ -9,7 +9,7 @@
         "url": "https://github.com/tewarid/node-tcp-proxy.git"
     },
     "bin" : { 
-        "tcpproxy" : "./script.js"
+        "tcpproxy" : "./tcp-proxy-cli.js"
     },
     "dependencies": {
         "optimist": "latest"
