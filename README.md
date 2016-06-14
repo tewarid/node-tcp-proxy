@@ -11,7 +11,7 @@ node tcpproxy.js  --proxyPort [port1] --serviceHost [host] --servicePort [port2]
 
 To create a proxy in your own code
 ```javascript
-var proxy = require("./tcp-proxy.js");
+var proxy = require("node-tcp-proxy");
 var newProxy = proxy.createProxy(8080, "hostname", 10080);
 ```
 
