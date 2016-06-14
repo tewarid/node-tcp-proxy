@@ -9,6 +9,11 @@ To achieve the same with node-tcp-proxy
 node tcpproxy.js  --proxyPort [port1] --serviceHost [host] --servicePort [port2]
 ```
 
+Install node-tcp-proxy from [npm](https://www.npmjs.com/package/node-tcp-proxy)
+```
+sudo npm install -g node-tcp-proxy
+```
+
 To create a proxy in your own code
 ```javascript
 var proxy = require("node-tcp-proxy");
