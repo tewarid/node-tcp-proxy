@@ -35,15 +35,24 @@ Proxy.prototype.createProxy = function () {
                     serviceSocket.write(buffers[i]);
                 }
             }
+
+            serviceSocket.on("error", function (e) {
+                console.log("Could not connect to service at host "
+                    + proxy.serviceHost + ', port ' + proxy.servicePort);
+                proxySocket.end();
+            });
+
+            serviceSocket.on("data", function (data) {
+                proxySocket.write(data);
+            });
+            
+            serviceSocket.on("close", function (had_error) {
+                proxySocket.end();
+            });
         });
 
         proxySocket.on("error", function (e) {
             serviceSocket.end();
-        });
-        serviceSocket.on("error", function (e) {
-            console.log("Could not connect to service at host "
-                + proxy.serviceHost + ', port ' + proxy.servicePort);
-            proxySocket.end();
         });
         
         proxySocket.on("data", function (data) {
@@ -53,16 +62,10 @@ Proxy.prototype.createProxy = function () {
                 buffers[buffers.length] = data;
             }
         });
-        serviceSocket.on("data", function (data) {
-            proxySocket.write(data);
-        });
 
         proxySocket.on("close", function (had_error) {
             delete proxy.proxySockets[uniqueKey(proxySocket)];
             serviceSocket.end();
-        });
-        serviceSocket.on("close", function (had_error) {
-            proxySocket.end();
         });
 
     }).listen(proxy.proxyPort)
