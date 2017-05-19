@@ -5,23 +5,24 @@ function uniqueKey(socket) {
     return key;
 }
 
-function Proxy(proxyPort, serviceHost, servicePort) {
+function Proxy(proxyPort, serviceHost, servicePort, options) {
     this.proxyPort = proxyPort;
     this.serviceHost = serviceHost;
     this.servicePort = servicePort;
+	this.options = options;
     this.proxySockets = {};
 
     this.createProxy();
-    console.log("Proxy listening at port " + this.proxyPort);
 }
 
 Proxy.prototype.createProxy = function () {
+    this.log("Proxy listening at port " + this.proxyPort);
     var proxy = this;
 
     proxy.server = net.createServer(function (proxySocket) {
         
         var key = uniqueKey(proxySocket);
-        console.log("Client connected from " + key);
+        proxy.log("Client connected from " + key);
         proxy.proxySockets[key] = proxySocket;
         
         var connected = false;
@@ -41,23 +42,23 @@ Proxy.prototype.createProxy = function () {
             });
             
             serviceSocket.on("close", function (had_error) {
-                console.log("service socket closed");
-                console.log("  ending proxy socket");
+                proxy.log("service socket closed");
+                proxy.log("  ending proxy socket");
                 proxySocket.destroy();
             });
         });
 
         serviceSocket.on("error", function (e) {
-            console.log("service socket error");
-            console.log(e);
-            console.log("  ending proxy socket");
+            proxy.log("service socket error");
+            proxy.log(e);
+            proxy.log("  ending proxy socket");
             proxySocket.destroy();
         });
 
 
         proxySocket.on("error", function (e) {
-            console.log("proxy socket error");
-            console.log(e);
+            proxy.log("proxy socket error");
+            proxy.log(e);
         });
         
         proxySocket.on("data", function (data) {
@@ -73,17 +74,26 @@ Proxy.prototype.createProxy = function () {
             serviceSocket.destroy();
         });
 
-    }).listen(proxy.proxyPort)
+    }).listen(proxy.proxyPort);
 }
 
 Proxy.prototype.end = function () {
-    console.log("Terminating proxy");
+    this.log("Terminating proxy");
     this.server.close();
     for (var key in this.proxySockets) {
         this.proxySockets[key].destroy();
     }
 }
 
-exports.createProxy = function(proxyPort, serviceHost, servicePort) {    
-    return new Proxy(proxyPort, serviceHost, servicePort);
+Proxy.prototype.log = function (msg) {
+    try {
+        if (!this.options || !this.options.quiet) {
+            console.log(msg);
+        }
+    } catch(e) {
+    }
+}
+
+exports.createProxy = function(proxyPort, serviceHost, servicePort, options) {    
+    return new Proxy(proxyPort, serviceHost, servicePort, options);
 }

@@ -2,11 +2,16 @@
 var proxy = require("./tcp-proxy.js");
  
 var argv = require("optimist")
-    .usage('Usage: $0 --proxyPort [port] --serviceHost [host] --servicePort [port]')
+    .usage('Usage: $0 --proxyPort [port] --serviceHost [host] --servicePort [port] [--q]')
     .demand(['proxyPort', 'serviceHost', 'servicePort'])
+	.boolean('q')
     .argv;
 
-var newProxy = proxy.createProxy(argv.proxyPort, argv.serviceHost, argv.servicePort);
+var options = {
+	quiet: argv.q
+};
+
+var newProxy = proxy.createProxy(argv.proxyPort, argv.serviceHost, argv.servicePort, options);
 
 process.on("uncaughtException", function (err) {
     console.info(err);
