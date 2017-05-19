@@ -6,7 +6,7 @@ port1 is where socat listens for incoming requests. host and port2 are the host 
 
 To achieve the same with node-tcp-proxy
 ```
-node tcpproxy.js  --proxyPort [port1] --serviceHost [host] --servicePort [port2]
+node tcpproxy.js  --proxyPort [port1] --serviceHost [host] --servicePort [port2] [--q]
 ```
 
 Install node-tcp-proxy from [npm](https://www.npmjs.com/package/node-tcp-proxy)
@@ -14,7 +14,7 @@ Install node-tcp-proxy from [npm](https://www.npmjs.com/package/node-tcp-proxy)
 sudo npm install -g node-tcp-proxy
 ```
 
-To create a proxy in your own code
+To create a proxy in your own code.
 ```javascript
 var proxy = require("node-tcp-proxy");
 var newProxy = proxy.createProxy(8080, "hostname", 10080);
@@ -24,3 +24,5 @@ To end the proxy
 ```javascript
 newProxy.end();
 ```
+
+Console output may be silenced through an optional `{quiet: true}` fourth `createProxy` argument.
