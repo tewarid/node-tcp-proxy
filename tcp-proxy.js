@@ -42,18 +42,15 @@ Proxy.prototype.createProxy = function () {
                     serviceSocket.write(buffers[i]);
                 }
             }
-
-            serviceSocket.on("data", function (data) {
-                proxySocket.write(data);
-            });
-            
-            serviceSocket.on("close", function (had_error) {
-                proxy.log("service socket closed");
-                proxy.log("  ending proxy socket");
-                proxySocket.destroy();
-            });
         });
-
+        serviceSocket.on("data", function (data) {
+            proxySocket.write(data);
+        });        
+        serviceSocket.on("close", function (had_error) {
+            proxy.log("service socket closed");
+            proxy.log("  ending proxy socket");
+            proxySocket.destroy();
+        });
         serviceSocket.on("error", function (e) {
             proxy.log("service socket error");
             proxy.log(e);
@@ -61,12 +58,10 @@ Proxy.prototype.createProxy = function () {
             proxySocket.destroy();
         });
 
-
         proxySocket.on("error", function (e) {
             proxy.log("proxy socket error");
             proxy.log(e);
-        });
-        
+        });        
         proxySocket.on("data", function (data) {
             if (connected) {
                 serviceSocket.write(data);
@@ -74,7 +69,6 @@ Proxy.prototype.createProxy = function () {
                 buffers[buffers.length] = data;
             }
         });
-
         proxySocket.on("close", function (had_error) {
             delete proxy.proxySockets[uniqueKey(proxySocket)];
             serviceSocket.destroy();
