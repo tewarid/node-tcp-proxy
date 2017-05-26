@@ -1,5 +1,11 @@
 var net = require("net");
 
+module.exports = {
+    createProxy: function(proxyPort, serviceHost, servicePort, options) {    
+        return new Proxy(proxyPort, serviceHost, servicePort, options);
+    }
+}
+
 function uniqueKey(socket) {
     var key = socket.remoteAddress + ':' + socket.remotePort;
     return key;
@@ -92,8 +98,4 @@ Proxy.prototype.log = function (msg) {
         }
     } catch(e) {
     }
-}
-
-exports.createProxy = function(proxyPort, serviceHost, servicePort, options) {    
-    return new Proxy(proxyPort, serviceHost, servicePort, options);
 }
