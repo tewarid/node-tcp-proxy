@@ -74,7 +74,7 @@ Proxy.prototype.createProxy = function () {
             serviceSocket.destroy();
         });
 
-    }).listen(proxy.proxyPort);
+    }).listen(proxy.proxyPort, proxy.options.hostname);
 }
 
 Proxy.prototype.end = function () {
@@ -83,6 +83,7 @@ Proxy.prototype.end = function () {
     for (var key in this.proxySockets) {
         this.proxySockets[key].destroy();
     }
+    this.server.unref();
 }
 
 Proxy.prototype.log = function (msg) {
