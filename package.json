@@ -2,16 +2,22 @@
     "name": "node-tcp-proxy",
     "description": "A simple TCP proxy built using Node.js",
     "license": "MIT",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "main": "index.js",
     "repository": {
-        "type": "git", 
+        "type": "git",
         "url": "https://github.com/tewarid/node-tcp-proxy.git"
     },
-    "bin" : { 
-        "tcpproxy" : "./tcp-proxy-cli.js"
+    "bin": {
+        "tcpproxy": "./tcp-proxy-cli.js"
     },
     "dependencies": {
-        "optimist": "latest"
-    }
+        "optimist": "^0.6.1"
+    },
+    "devDependencies": {
+        "eslint": "^4.0.0",
+        "eslint-config-google": "^0.8.0",
+        "eslint-plugin-security": "^1.4.0"
+    },
+    "false": {}
 }

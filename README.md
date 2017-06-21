@@ -1,4 +1,4 @@
-# node-tcp-proxy
+# node-tcp-proxy [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3e3d035c4b78445bbec6fb348cf027e1)](https://www.codacy.com/app/tewarid/node-tcp-proxy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tewarid/node-tcp-proxy&amp;utm_campaign=Badge_Grade)
 
 A simple TCP proxy that may be used to access a service on another network. An extensible replacement for socat when used thus
 

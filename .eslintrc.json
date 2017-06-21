@@ -1,0 +1,16 @@
+{
+    "plugins": [
+        "security"
+    ],
+    "extends": [
+        "google",
+        "plugin:security/recommended"
+    ],
+    "rules": {
+        "quotes": "off",
+        "require-jsdoc": "off",
+        "no-var": "off",
+        "guard-for-in": "off",
+        "comma-dangle": "off"
+    }
+}
