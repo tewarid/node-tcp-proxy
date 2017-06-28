@@ -11,7 +11,7 @@ socat TCP-LISTEN:port1,fork TCP:host:port2
 To achieve the same with node-tcp-proxy
 
 ```bash
-node tcpproxy.js  --proxyPort port1 [--hostname [IP]] --serviceHost host --servicePort port2 [--q]
+tcpproxy  --proxyPort port1 [--hostname [IP]] --serviceHost host --servicePort port2 [--q]
 ```
 
 Optionally, `hostname` specifies the IP address to listen at. Node.js listens on unspecified IPv6 address `::` by default.
@@ -29,7 +29,7 @@ To create a proxy in your own code
 
 ```javascript
 var proxy = require("node-tcp-proxy");
-var newProxy = proxy.createProxy(8080, "hostname", 10080);
+var newProxy = proxy.createProxy(8080, "host", 10080);
 ```
 
 To end the proxy
@@ -38,4 +38,4 @@ To end the proxy
 newProxy.end();
 ```
 
-`hostname` can be provided through an optional fourth parameter e.g. `{hostname: 0.0.0.0}` to `createProxy`. Console output may be silenced by using `quiet: true` e.g. `{hostname: 0.0.0.0, quiet: true}`.
+`hostname` can be provided through an optional fourth parameter e.g. `{hostname: 0.0.0.0}` to `createProxy`. Console output may be silenced by adding `quiet: true` e.g. `{hostname: 0.0.0.0, quiet: true}`.
