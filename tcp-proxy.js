@@ -9,7 +9,13 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     this.proxyPort = proxyPort;
     this.serviceHost = serviceHost;
     this.servicePort = servicePort;
-	this.options = options;
+    if (options === undefined) {
+        this.options = {
+            quiet: false
+        };
+    } else {
+        this.options = options;
+    }
     this.proxySockets = {};
 
     this.createProxy();
@@ -17,8 +23,8 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
 
 TcpProxy.prototype.createProxy = function() {
     this.log("proxy listening at port " + this.proxyPort);
-    var proxy = this;
 
+    const proxy = this;
     proxy.server = net.createServer(function(proxySocket) {
         var key = uniqueKey(proxySocket);
         proxy.log("client connected from " + key);
@@ -67,7 +73,8 @@ TcpProxy.prototype.createProxy = function() {
             delete proxy.proxySockets[uniqueKey(proxySocket)];
             serviceSocket.destroy();
         });
-    }).listen(proxy.proxyPort, proxy.options.hostname);
+    });
+    proxy.server.listen(proxy.proxyPort, proxy.options.hostname);
 };
 
 TcpProxy.prototype.end = function() {
@@ -80,7 +87,7 @@ TcpProxy.prototype.end = function() {
 };
 
 TcpProxy.prototype.log = function(msg) {
-    if (!this.options || !this.options.quiet) {
+    if (!this.options.quiet) {
         console.log(msg);
     }
 };
