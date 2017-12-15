@@ -22,63 +22,56 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
 }
 
 TcpProxy.prototype.createProxy = function() {
-    this.log("proxy listening at port " + this.proxyPort);
-
     const proxy = this;
     proxy.server = net.createServer(function(proxySocket) {
         var key = uniqueKey(proxySocket);
-        proxy.log("client connected from " + key);
         proxy.proxySockets[key] = proxySocket;
-
-        var connected = false;
-        var buffers = [];
-
-        var serviceSocket = new net.Socket();
-        serviceSocket.connect(proxy.servicePort,
-        proxy.serviceHost, function() {
-            connected = true;
-            if (buffers.length > 0) {
-                for (var i = 0; i < buffers.length; i++) {
-                    serviceSocket.write(buffers[i]);
-                }
-            }
-        });
-        serviceSocket.on("data", function(data) {
-            proxySocket.write(data);
-        });
-        serviceSocket.on("close", function(hadError) {
-            proxy.log("service socket closed");
-            proxy.log("  ending proxy socket");
-            proxySocket.destroy();
-        });
-        serviceSocket.on("error", function(e) {
-            proxy.log("service socket error");
-            proxy.log(e);
-            proxy.log("  ending proxy socket");
-            proxySocket.destroy();
-        });
-
-        proxySocket.on("error", function(e) {
-            proxy.log("proxy socket error");
-            proxy.log(e);
-        });
+        var context = {
+            buffers: [],
+            connected: false,
+            proxySocket: proxySocket
+        };    
+        proxy.createServiceSocket(context);
         proxySocket.on("data", function(data) {
-            if (connected) {
-                serviceSocket.write(data);
+            if (context.connected) {
+                context.serviceSocket.write(data);
             } else {
-                buffers[buffers.length] = data;
+                context.buffers[context.buffers.length] = data;
             }
         });
         proxySocket.on("close", function(hadError) {
             delete proxy.proxySockets[uniqueKey(proxySocket)];
-            serviceSocket.destroy();
+            context.serviceSocket.destroy();
         });
     });
     proxy.server.listen(proxy.proxyPort, proxy.options.hostname);
 };
 
+TcpProxy.prototype.createServiceSocket = function(context) {
+    const proxy = this;
+    context.serviceSocket = new net.Socket();
+    context.serviceSocket.connect(proxy.servicePort, proxy.serviceHost,
+    function() {
+        context.connected = true;
+        if (context.buffers.length > 0) {
+            for (var i = 0; i < context.buffers.length; i++) {
+                context.serviceSocket.write(context.buffers[i]);
+            }
+        }
+    });
+    context.serviceSocket.on("data", function(data) {
+        context.proxySocket.write(data);
+    });
+    context.serviceSocket.on("close", function(hadError) {
+        context.proxySocket.destroy();
+    });
+    context.serviceSocket.on("error", function(e) {
+        context.proxySocket.destroy();
+    });
+    return context;
+};
+
 TcpProxy.prototype.end = function() {
-    this.log("terminating proxy");
     this.server.close();
     for (var key in this.proxySockets) {
         this.proxySockets[key].destroy();

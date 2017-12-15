@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-var proxy = require("./tcp-proxy.js");
 
 var argv = require("optimist")
     .usage("Usage: $0 --proxyPort [port] [--hostname [IP]]"
@@ -13,13 +12,14 @@ var options = {
 	quiet: argv.q
 };
 
-var newProxy = proxy.createProxy(argv.proxyPort, argv.serviceHost,
-    argv.servicePort, options);
+const proxy = require("./tcp-proxy.js")
+    .createProxy(argv.proxyPort, argv.serviceHost,
+        argv.servicePort, options);
 
 process.on("uncaughtException", function(err) {
-    console.info(err);
+
 });
 
 process.on("SIGINT", function() {
-    newProxy.end();
+    proxy.end();
 });
