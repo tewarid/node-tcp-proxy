@@ -3,7 +3,6 @@
 var argv = require("commander");
 
 argv
-    .usage("Usage: $0 --proxyPort [port] [--hostname [IP]]  --serviceHost [host] --servicePort [port] [--q]")
     .usage("[options]")
     .version("0.0.9")
     .option("-p, --proxyPort <number>", "Proxy port number", parseInt)
@@ -11,11 +10,18 @@ argv
     .option("-n, --serviceHost <name>", "Name or IP address of service host")
     .option("-s, --servicePort <number>", "Service port number", parseInt)
     .option("-q, --q", "Be quiet")
+    .option("-t, --tls [both]", "Use TLS", false)
+    .option("-c, --pfx [file]", "Private key file", "cert.pfx")
+    .option("-p, --passphrase [value]",
+        "Passphrase to access private key file", "abcd")
     .parse(process.argv);
-console.log(argv);
+
 var options = {
     hostname: argv.hostname,
-	quiet: argv.q
+	quiet: argv.q,
+	tls: argv.tls,
+    pfx: argv.pfx,
+    passphrase: argv.passphrase
 };
 
 const proxy = require("./tcp-proxy.js")

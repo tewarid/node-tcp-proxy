@@ -11,10 +11,12 @@ socat TCP-LISTEN:port1,fork TCP:host:port2
 To achieve the same with node-tcp-proxy
 
 ```bash
-tcpproxy  --proxyPort port1 [--hostname [IP]] --serviceHost host --servicePort port2 [--q]
+tcpproxy  --proxyPort port1 [--hostname [IP]] --serviceHost host --servicePort port2 [--q] [--tls [both]] [--pfx file] [--passphrase secret]
 ```
 
 Optionally, `hostname` specifies the IP address to listen at. Node.js listens on unspecified IPv6 address `::` by default.
+
+TLS can be enabled at the proxy port using the `tls` option. If followed by `both`, TLS is also used with the service. Use `pfx` option to specify server certificate, and `passphrase` to provide the password required to access it.
 
 ## npm
 
