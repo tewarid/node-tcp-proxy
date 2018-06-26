@@ -2,7 +2,7 @@
     "name": "node-tcp-proxy",
     "description": "A simple TCP proxy built using Node.js",
     "license": "MIT",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "main": "index.js",
     "repository": {
         "type": "git",
@@ -12,7 +12,7 @@
         "tcpproxy": "./tcp-proxy-cli.js"
     },
     "dependencies": {
-        "optimist": "^0.6.1"
+        "commander": "^2.15.1"
     },
     "devDependencies": {
         "eslint": "^4.0.0",
