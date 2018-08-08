@@ -11,8 +11,9 @@ argv
     .option("-s, --servicePort <number>", "Service port number", parseInt)
     .option("-q, --q", "Be quiet")
     .option("-t, --tls [both]", "Use TLS", false)
-    .option("-c, --pfx [file]", "Private key file", "cert.pfx")
-    .option("-p, --passphrase [value]",
+    .option("-c, --pfx [file]", "Private key file",
+        require.resolve("./cert.pfx"))
+    .option("-a, --passphrase [value]",
         "Passphrase to access private key file", "abcd")
     .parse(process.argv);
 
