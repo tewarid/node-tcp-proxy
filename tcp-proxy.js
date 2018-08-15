@@ -28,7 +28,8 @@ TcpProxy.prototype.createProxy = function() {
     if (proxy.options.tls !== false) {
         var tlsOptions = {
             pfx: fs.readFileSync(proxy.options.pfx),
-            passphrase: proxy.options.passphrase
+            passphrase: proxy.options.passphrase,
+            secureProtocol: "TLSv1_2_method"
         };
         proxy.server = tls.createServer(tlsOptions, function(socket) {
             proxy.handleClient(socket);
@@ -69,7 +70,8 @@ TcpProxy.prototype.createServiceSocket = function(context) {
     if (proxy.options.tls === "both") {
         context.serviceSocket =
         tls.connect(proxy.servicePort, proxy.serviceHost, {
-            rejectUnauthorized: proxy.options.rejectUnauthorized
+            rejectUnauthorized: proxy.options.rejectUnauthorized,
+            secureProtocol: "TLSv1_2_method"
         }, function() {
             proxy.writeBuffer(context);
         });

@@ -10,7 +10,10 @@ argv
     .option("-n, --serviceHost <name>", "Name or IP address of service host")
     .option("-s, --servicePort <number>", "Service port number", parseInt)
     .option("-q, --q", "Be quiet")
-    .option("-t, --tls [both]", "Use TLS", false)
+    .option("-t, --tls [both]", "Use TLS 1.2 with clients; " +
+        "specify both to also use TLS 1.2 with service", false)
+    .option("-u, --rejectUnauthorized [value]",
+        "Do not accept invalid certificate", false)
     .option("-c, --pfx [file]", "Private key file",
         require.resolve("./cert.pfx"))
     .option("-a, --passphrase [value]",
@@ -20,7 +23,8 @@ argv
 var options = {
     hostname: argv.hostname,
 	quiet: argv.q,
-	tls: argv.tls,
+    tls: argv.tls,
+    rejectUnauthorized: argv.rejectUnauthorized !== "false",
     pfx: argv.pfx,
     passphrase: argv.passphrase
 };
