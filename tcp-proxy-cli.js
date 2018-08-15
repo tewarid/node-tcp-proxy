@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-
 var argv = require("commander");
+var packageConfig = require('./package.json');
 
 argv
     .usage("[options]")
-    .version("0.0.9")
+    .version(packageConfig.version)
     .option("-p, --proxyPort <number>", "Proxy port number", parseInt)
     .option("-h, --hostname [name]", "Name or IP address of host")
     .option("-n, --serviceHost <name>", "Name or IP address of service host")
