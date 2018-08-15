@@ -7,8 +7,13 @@ argv
     .version(packageConfig.version)
     .option("-p, --proxyPort <number>", "Proxy port number", parseInt)
     .option("-h, --hostname [name]", "Name or IP address of host")
-    .option("-n, --serviceHost <name>", "Name or IP address of service host")
-    .option("-s, --servicePort <number>", "Service port number", parseInt)
+    .option("-n, --serviceHost <name>",
+        "Name or IP address of service host(s); " +
+        "if this is a comma separated list, " +
+        "proxy performs round-robin load balancing")
+    .option("-s, --servicePort <number>", "Service port number(s); " +
+        "if this a comma separated list," +
+        "it should have as many entries as serviceHost")
     .option("-q, --q", "Be quiet")
     .option("-t, --tls [both]", "Use TLS 1.2 with clients; " +
         "specify both to also use TLS 1.2 with service", false)
@@ -29,9 +34,8 @@ var options = {
     passphrase: argv.passphrase
 };
 
-const proxy = require("./tcp-proxy.js")
-    .createProxy(argv.proxyPort, argv.serviceHost,
-        argv.servicePort, options);
+const proxy = require("./tcp-proxy.js").createProxy(argv.proxyPort,
+    argv.serviceHost, argv.servicePort, options);
 
 process.on("uncaughtException", function(err) {
 

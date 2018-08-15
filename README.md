@@ -3,18 +3,18 @@
 A simple TCP proxy that may be used to access a service on another network. An extensible replacement for socat when used thus
 
 ```bash
-socat TCP-LISTEN:port1,fork TCP:host:port2
+socat TCP-LISTEN:port,fork TCP:host:port
 ```
 
-`port1` is where socat listens for incoming requests. `host` and `port2` are the host and port where the actual service is listening at.
+`port` is where socat listens for incoming requests. `host:port` are the host and port where the actual service is listening at.
 
 To achieve the same with node-tcp-proxy
 
 ```bash
-tcpproxy  --proxyPort port1 [--hostname [IP]] --serviceHost host --servicePort port2 [--q] [--tls [both]] [--pfx file] [--passphrase secret]
+tcpproxy  --proxyPort port [--hostname <name or IP>] --serviceHost host1,host2 --servicePort port1,port2 [--q] [--tls [both]] [--pfx file] [--passphrase secret]
 ```
 
-Optionally, `hostname` specifies the IP address to listen at. Node.js listens on unspecified IPv6 address `::` by default.
+Optionally, `hostname` specifies the IP address to listen at. Node.js listens on unspecified IPv6 address `::` by default. If `serviceHost` and `servicePort` specify a comma separated list, the proxy will perform load balancing on a round-robin basis.
 
 TLS can be enabled at the proxy port using the `tls` option. If followed by `both`, TLS is also used with the service. Use `pfx` option to specify server certificate, and `passphrase` to provide the password required to access it.
 
