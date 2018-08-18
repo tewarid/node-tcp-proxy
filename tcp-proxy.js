@@ -12,10 +12,20 @@ function uniqueKey(socket) {
     return key;
 }
 
+function parse(o) {
+    if (typeof o === "string") {
+        return o.split(",");
+    } else if (Array.isArray(o)) {
+        return o;
+    } else {
+        throw new Error("cannot parse object: " + o);
+    }
+}
+
 function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     this.proxyPort = proxyPort;
-    this.serviceHosts = serviceHost.split(",");
-    this.servicePorts = servicePort.split(",");
+    this.serviceHosts = parse(serviceHost);
+    this.servicePorts = parse(servicePort);
     this.serviceHostIndex = -1;
     if (options === undefined) {
         this.options = {quiet: false};

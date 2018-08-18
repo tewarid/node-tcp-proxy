@@ -41,3 +41,12 @@ newProxy.end();
 ```
 
 `hostname` can be provided through an optional fourth parameter e.g. `{hostname: 0.0.0.0}` to `createProxy`. Console output may be silenced by adding `quiet: true` e.g. `{hostname: 0.0.0.0, quiet: true}`.
+
+If you specify more than one service host and port pair, the proxy will perform round-robin load balancing
+
+```javascript
+var hosts = ["host1", "host2"];
+var ports = [10080, 10080];
+var newProxy = proxy.createProxy(8080, hosts, ports);
+// or var newProxy = proxy.createProxy(8080, "host1,host2", "10080,10080");
+```

@@ -38,7 +38,8 @@ const proxy = require("./tcp-proxy.js").createProxy(argv.proxyPort,
     argv.serviceHost, argv.servicePort, options);
 
 process.on("uncaughtException", function(err) {
-
+    console.error(err);
+    proxy.end();
 });
 
 process.on("SIGINT", function() {
