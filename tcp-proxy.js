@@ -49,7 +49,7 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
 }
 
 TcpProxy.prototype.createListener = function() {
-    const self = this;
+    var self = this;
     if (self.options.tls !== false) {
         self.server = tls.createServer(self.proxyTlsOptions, function(socket) {
             self.handleClient(socket);
@@ -63,7 +63,7 @@ TcpProxy.prototype.createListener = function() {
 };
 
 TcpProxy.prototype.handleClient = function(proxySocket) {
-    const self = this;
+    var self = this;
     var key = uniqueKey(proxySocket);
     self.proxySockets[key] = proxySocket;
     var context = {
@@ -83,10 +83,13 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
         delete self.proxySockets[uniqueKey(proxySocket)];
         context.serviceSocket.destroy();
     });
+    proxySocket.on("error", function(e) {
+        context.serviceSocket.destroy();
+    });
 };
 
 TcpProxy.prototype.createServiceSocket = function(context) {
-    const self = this;
+    var self = this;
     var i = self.getServiceHostIndex();
     if (self.options.tls === "both") {
         context.serviceSocket = tls.connect(self.servicePorts[i],
