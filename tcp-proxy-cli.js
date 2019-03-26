@@ -5,15 +5,16 @@ var packageConfig = require('./package.json');
 argv
     .usage("[options]")
     .version(packageConfig.version)
-    .option("-p, --proxyPort <number>", "Proxy port number", parseInt)
+    .option("-p, --proxyPort <number>",
+        "Proxy port number (required)", parseInt)
     .option("-h, --hostname [name]", "Name or IP address of host")
     .option("-n, --serviceHost <name>",
         "Name or IP address of service host(s); " +
         "if this is a comma separated list, " +
-        "proxy performs round-robin load balancing")
+        "performs round-robin load balancing (required)")
     .option("-s, --servicePort <number>", "Service port number(s); " +
         "if this a comma separated list," +
-        "it should have as many entries as serviceHost")
+        "it should have as many entries as serviceHost (required)")
     .option("-q, --q", "Be quiet")
     .option("-t, --tls [both]", "Use TLS 1.2 with clients; " +
         "specify both to also use TLS 1.2 with service", false)
@@ -27,14 +28,18 @@ argv
 
 var options = {
     hostname: argv.hostname,
-	quiet: argv.q,
+    quiet: argv.q,
     tls: argv.tls,
     rejectUnauthorized: argv.rejectUnauthorized !== "false",
     pfx: argv.pfx,
     passphrase: argv.passphrase
 };
 
-const proxy = require("./tcp-proxy.js").createProxy(argv.proxyPort,
+if (!argv.proxyPort || !argv.serviceHost || !argv.servicePort) {
+    argv.help();
+}
+
+var proxy = require("./tcp-proxy.js").createProxy(argv.proxyPort,
     argv.serviceHost, argv.servicePort, options);
 
 process.on("uncaughtException", function(err) {
