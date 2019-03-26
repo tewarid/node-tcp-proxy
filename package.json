@@ -12,11 +12,11 @@
         "tcpproxy": "./tcp-proxy-cli.js"
     },
     "dependencies": {
-        "commander": "^2.15.1"
+        "commander": "^2.19.0"
     },
     "devDependencies": {
-        "eslint": "^4.0.0",
-        "eslint-config-google": "^0.8.0",
+        "eslint": "^4.19.1",
+        "eslint-config-google": "^0.8.1",
         "eslint-plugin-security": "^1.4.0"
     },
     "false": {}
