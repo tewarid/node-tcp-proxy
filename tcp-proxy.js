@@ -15,6 +15,8 @@ function uniqueKey(socket) {
 function parse(o) {
     if (typeof o === "string") {
         return o.split(",");
+    } else if(typeof o === "number"){
+        return parse(o.toString());
     } else if (Array.isArray(o)) {
         return o;
     } else {
@@ -27,16 +29,18 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     this.serviceHosts = parse(serviceHost);
     this.servicePorts = parse(servicePort);
     this.serviceHostIndex = -1;
-    if (options === undefined) {
-        this.options = {quiet: false};
-    } else {
-        this.options = options;
-    }
+    this.options = Object.assign({
+        quiet: false,
+        pfx: require.resolve('./cert.pfx'),
+        passphrase: 'abcd',
+        rejectUnauthorized: true
+    }, options);
+
     this.proxyTlsOptions = {
         passphrase: this.options.passphrase,
         secureProtocol: "TLSv1_2_method"
     };
-    if (this.options.tls !== false) {
+    if (this.options.tls) {
         this.proxyTlsOptions.pfx = fs.readFileSync(this.options.pfx);
     }
     this.serviceTlsOptions = {
@@ -50,7 +54,7 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
 
 TcpProxy.prototype.createListener = function() {
     var self = this;
-    if (self.options.tls !== false) {
+    if (self.options.tls) {
         self.server = tls.createServer(self.proxyTlsOptions, function(socket) {
             self.handleClient(socket);
         });
