@@ -15,7 +15,7 @@ function uniqueKey(socket) {
 function parse(o) {
     if (typeof o === "string") {
         return o.split(",");
-    } else if(typeof o === "number"){
+    } else if (typeof o === "number") {
         return parse(o.toString());
     } else if (Array.isArray(o)) {
         return o;
