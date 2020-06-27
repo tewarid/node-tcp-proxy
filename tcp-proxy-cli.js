@@ -15,6 +15,10 @@ argv
     .option("-s, --servicePort <number>", "Service port number(s); " +
         "if this a comma separated list," +
         "it should have as many entries as serviceHost (required)")
+    .option("-m, --localAddress <address>",
+        "IP address of interface to use to connect to service")
+    .option("-l, --localPort <port>",
+        "Port number to use to connect to service")
     .option("-q, --q", "Be quiet")
     .option("-t, --tls [both]", "Use TLS 1.2 with clients; " +
         "specify both to also use TLS 1.2 with service", false)
@@ -26,14 +30,10 @@ argv
         "Passphrase to access private key file", "abcd")
     .parse(process.argv);
 
-var options = {
-    hostname: argv.hostname,
+var options = Object.assign(argv, {
     quiet: argv.q,
-    tls: argv.tls,
-    rejectUnauthorized: argv.rejectUnauthorized !== "false",
-    pfx: argv.pfx,
-    passphrase: argv.passphrase
-};
+    rejectUnauthorized: argv.rejectUnauthorized !== "false"
+});
 
 if (!argv.proxyPort || !argv.serviceHost || !argv.servicePort) {
     argv.help();

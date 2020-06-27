@@ -95,17 +95,21 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
 TcpProxy.prototype.createServiceSocket = function(context) {
     var self = this;
     var i = self.getServiceHostIndex();
+    var options = Object.assign({
+        port: self.servicePorts[i],
+        host: self.serviceHosts[i],
+        localAddress: self.options.localAddress,
+        localPort: self.options.localPort,
+    }, self.serviceTlsOptions);
     if (self.options.tls === "both") {
-        context.serviceSocket = tls.connect(self.servicePorts[i],
-            self.serviceHosts[i], self.serviceTlsOptions, function() {
+        context.serviceSocket = tls.connect(options, function() {
                 self.writeBuffer(context);
             });
     } else {
         context.serviceSocket = new net.Socket();
-        context.serviceSocket.connect(self.servicePorts[i],
-            self.serviceHosts[i], function() {
-                self.writeBuffer(context);
-            });
+        context.serviceSocket.connect(options, function() {
+            self.writeBuffer(context);
+        });
     }
     context.serviceSocket.on("data", function(data) {
         context.proxySocket.write(data);
