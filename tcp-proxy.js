@@ -1,6 +1,7 @@
 var net = require("net");
 var tls = require('tls');
 var fs = require('fs');
+var util = require('util');
 
 module.exports.createProxy = function(proxyPort,
     serviceHost, servicePort, options) {
@@ -49,6 +50,12 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     };
     this.proxySockets = {};
 
+    this.users = options.identUsers;
+    if (this.users.length)
+        this.log('Only allow these users: '.concat(this.users.join(', ')));
+    else
+        this.log('Allow all users');
+
     this.createListener();
 }
 
@@ -60,10 +67,47 @@ TcpProxy.prototype.createListener = function() {
         });
     } else {
         self.server = net.createServer(function(socket) {
-            self.handleClient(socket);
+            if (self.users)
+                self.handleAuth(socket);
+            else
+                self.handleClient(socket);
         });
     }
     self.server.listen(self.proxyPort, self.options.hostname);
+};
+
+
+// RFC 1413 authentication
+TcpProxy.prototype.handleAuth = function(proxySocket) {
+    var self = this;
+    var query = util.format("%d, %d", proxySocket.remotePort, this.proxyPort);
+    var ident = new net.Socket();
+    var resp = undefined;
+    ident.on('error', function(e) {
+        resp = false;
+        ident.destroy();
+    });
+    ident.on('data', function(data) {
+        resp = data.toString().trim();
+        ident.destroy();
+    });
+    ident.on('close', function(data) {
+        if (!resp) {
+            self.log('No identd');
+            proxySocket.destroy();
+            return;
+        }
+        let user = resp.split(':').pop();
+        if (!self.users.includes(user)) {
+            self.log(util.format('User "%s" unauthorized', user));
+            proxySocket.destroy();
+        } else
+            self.handleClient(proxySocket);
+    });
+    ident.connect(113, proxySocket.remoteAddress, function() {
+	    ident.write(query);
+        ident.end();
+    });
 };
 
 TcpProxy.prototype.handleClient = function(proxySocket) {
@@ -99,7 +143,7 @@ TcpProxy.prototype.createServiceSocket = function(context) {
         port: self.servicePorts[i],
         host: self.serviceHosts[i],
         localAddress: self.options.localAddress,
-        localPort: self.options.localPort,
+        localPort: self.options.localPort
     }, self.serviceTlsOptions);
     if (self.options.tls === "both") {
         context.serviceSocket = tls.connect(options, function() {

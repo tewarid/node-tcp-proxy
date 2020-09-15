@@ -28,11 +28,14 @@ argv
         require.resolve("./cert.pfx"))
     .option("-a, --passphrase [value]",
         "Passphrase to access private key file", "abcd")
+    .option("-i, --identUsers [user[,...]]",
+        "Comma-separated list of authorized users", "")
     .parse(process.argv);
 
 var options = Object.assign(argv, {
     quiet: argv.q,
-    rejectUnauthorized: argv.rejectUnauthorized !== "false"
+    rejectUnauthorized: argv.rejectUnauthorized !== "false",
+    identUsers: argv.identUsers === '' ? [] : argv.identUsers.split(',')
 });
 
 if (!argv.proxyPort || !argv.serviceHost || !argv.servicePort) {
