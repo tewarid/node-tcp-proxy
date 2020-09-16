@@ -14,6 +14,7 @@
         "require-jsdoc": "off",
         "no-var": "off",
         "guard-for-in": "off",
-        "comma-dangle": "off"
+        "comma-dangle": "off",
+        "indent": ["error", 4]
     }
 }

@@ -50,11 +50,12 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     };
     this.proxySockets = {};
 
-    this.users = options.identUsers;
-    if (this.users.length)
+    if (options.identUsers.length) {
+        this.users = options.identUsers;
         this.log('Only allow these users: '.concat(this.users.join(', ')));
-    else
+    } else {
         this.log('Allow all users');
+    }
 
     this.createListener();
 }
@@ -67,10 +68,11 @@ TcpProxy.prototype.createListener = function() {
         });
     } else {
         self.server = net.createServer(function(socket) {
-            if (self.users)
+            if (self.users) {
                 self.handleAuth(socket);
-            else
+            } else {
                 self.handleClient(socket);
+            }
         });
     }
     self.server.listen(self.proxyPort, self.options.hostname);
@@ -97,12 +99,13 @@ TcpProxy.prototype.handleAuth = function(proxySocket) {
             proxySocket.destroy();
             return;
         }
-        let user = resp.split(':').pop();
+        var user = resp.split(':').pop();
         if (!self.users.includes(user)) {
             self.log(util.format('User "%s" unauthorized', user));
             proxySocket.destroy();
-        } else
+        } else {
             self.handleClient(proxySocket);
+        }
     });
     ident.connect(113, proxySocket.remoteAddress, function() {
 	    ident.write(query);
@@ -147,8 +150,8 @@ TcpProxy.prototype.createServiceSocket = function(context) {
     }, self.serviceTlsOptions);
     if (self.options.tls === "both") {
         context.serviceSocket = tls.connect(options, function() {
-                self.writeBuffer(context);
-            });
+            self.writeBuffer(context);
+        });
     } else {
         context.serviceSocket = new net.Socket();
         context.serviceSocket.connect(options, function() {
