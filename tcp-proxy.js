@@ -34,7 +34,8 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
         quiet: false,
         pfx: require.resolve('./cert.pfx'),
         passphrase: 'abcd',
-        rejectUnauthorized: true
+        rejectUnauthorized: true,
+        identUsers: []
     }, options);
 
     this.proxyTlsOptions = {
@@ -108,7 +109,7 @@ TcpProxy.prototype.handleAuth = function(proxySocket) {
         }
     });
     ident.connect(113, proxySocket.remoteAddress, function() {
-	    ident.write(query);
+        ident.write(query);
         ident.end();
     });
 };
