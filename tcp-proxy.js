@@ -123,10 +123,11 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
     self.createServiceSocket(context);
     proxySocket.on("data", function(data) {
         if (context.connected) {
-            context.serviceSocket.write(self.interceptUpstream(context, data));
+            context.serviceSocket.write(
+                self.intercept(self.options.upstream, context, data));
         } else {
             context.buffers[context.buffers.length] =
-                self.interceptUpstream(context, data);
+                self.intercept(self.options.upstream, context, data);
         }
     });
     proxySocket.on("close", function(hadError) {
@@ -158,7 +159,8 @@ TcpProxy.prototype.createServiceSocket = function(context) {
         });
     }
     context.serviceSocket.on("data", function(data) {
-        context.proxySocket.write(self.interceptDownstream(context, data));
+        context.proxySocket.write(
+            self.intercept(self.options.downstream, context, data));
     });
     context.serviceSocket.on("close", function(hadError) {
         context.proxySocket.destroy();
@@ -199,16 +201,9 @@ TcpProxy.prototype.log = function(msg) {
     }
 };
 
-TcpProxy.prototype.interceptUpstream = function(context, data) {
-    if (this.options.upstream) {
-        return this.options.upstream(context, data);
-    }
-    return data;
-};
-
-TcpProxy.prototype.interceptDownstream = function(context, data) {
-    if (this.options.downstream) {
-        return this.options.downstream(context, data);
+TcpProxy.prototype.intercept = function(interceptor, context, data) {
+    if (interceptor) {
+        return interceptor(context, data);
     }
     return data;
 };
