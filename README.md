@@ -50,3 +50,26 @@ var ports = [10080, 10080];
 var newProxy = proxy.createProxy(8080, hosts, ports);
 // or var newProxy = proxy.createProxy(8080, "host1,host2", "10080,10080");
 ```
+
+You can intercept and modify data sent in either direction
+
+```javascript
+var proxy = require("node-tcp-proxy");
+var util = require("util");
+var newProxy = proxy.createProxy(8080, "www.google.com", 443, {
+    upstream: function(context, data) {
+        console.log(util.format("Client %s:%s sent:",
+            context.proxySocket.remoteAddress,
+            context.proxySocket.remotePort));
+        // do something with the data and return modified data
+        return data;
+    },
+    downstream: function(context, data) {
+        console.log(util.format("Service %s:%s sent:",
+            context.serviceSocket.remoteAddress,
+            context.serviceSocket.remotePort));
+        // do something with the data and return modified data
+        return data;
+    }
+});
+```
