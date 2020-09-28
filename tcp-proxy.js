@@ -49,8 +49,8 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
         secureProtocol: "TLSv1_2_method"
     };
     this.proxySockets = {};
-    if (options.identUsers) {
-        this.users = options.identUsers;
+    if (this.options.identUsers.length !== 0) {
+        this.users = this.options.identUsers;
         this.log('Only allow these users: '.concat(this.users.join(', ')));
     } else {
         this.log('Allow all users');
