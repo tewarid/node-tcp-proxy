@@ -141,7 +141,7 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
 
 TcpProxy.prototype.createServiceSocket = function(context) {
     var self = this;
-    var i = self.getServiceHostIndex();
+    var i = self.getServiceHostIndex(context.proxySocket);
     var options = Object.assign({
         port: self.servicePorts[i],
         host: self.serviceHosts[i],
@@ -170,12 +170,16 @@ TcpProxy.prototype.createServiceSocket = function(context) {
     });
 };
 
-TcpProxy.prototype.getServiceHostIndex = function() {
+TcpProxy.prototype.getServiceHostIndex = function(proxySocket) {
     this.serviceHostIndex++;
     if (this.serviceHostIndex == this.serviceHosts.length) {
         this.serviceHostIndex = 0;
     }
-    return this.serviceHostIndex;
+    var index = this.serviceHostIndex;
+    if (this.options.serviceHostSelected) {
+        index = this.options.serviceHostSelected(proxySocket, index);
+    }
+    return index;
 };
 
 TcpProxy.prototype.writeBuffer = function(context) {

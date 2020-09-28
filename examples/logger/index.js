@@ -1,9 +1,21 @@
 var proxy = require("node-tcp-proxy");
 var util = require("util");
 
-var newProxy = proxy.createProxy(8080, "www.google.com", 80, {
+var serviceHosts = ["www.google.com", "www.bing.com"];
+var servicePorts = [80, 80];
+
+var newProxy = proxy.createProxy(8080, serviceHosts, servicePorts, {
     upstream: intercept,
-    downstream: intercept
+    downstream: intercept,
+    serviceHostSelected: function(proxySocket, i) {
+        console.log(util.format("Service host %s:%s selected for client %s:%s.",
+            serviceHosts[i],
+            servicePorts[i],
+            proxySocket.remoteAddress,
+            proxySocket.remotePort));
+        // use your own strategy to calculate i
+        return i;
+    }
 });
 
 function intercept(context, data) {

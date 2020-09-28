@@ -51,12 +51,14 @@ var newProxy = proxy.createProxy(8080, hosts, ports);
 // or var newProxy = proxy.createProxy(8080, "host1,host2", "10080,10080");
 ```
 
-You can intercept and modify data sent in either direction
+You can intercept and modify data sent in either direction, and modify the service host selection strategy
 
 ```javascript
 var proxy = require("node-tcp-proxy");
 var util = require("util");
-var newProxy = proxy.createProxy(8080, "www.google.com", 443, {
+var serviceHosts = ["www.google.com", "www.bing.com"];
+var servicePorts = [80, 80];
+var newProxy = proxy.createProxy(8080, serviceHosts, servicePorts, {
     upstream: function(context, data) {
         console.log(util.format("Client %s:%s sent:",
             context.proxySocket.remoteAddress,
@@ -70,6 +72,15 @@ var newProxy = proxy.createProxy(8080, "www.google.com", 443, {
             context.serviceSocket.remotePort));
         // do something with the data and return modified data
         return data;
+    },
+    serviceHostSelected: function(proxySocket, i) {
+        console.log(util.format("Service host %s:%s selected for client %s:%s.",
+            serviceHosts[i],
+            servicePorts[i],
+            proxySocket.remoteAddress,
+            proxySocket.remotePort));
+        // use your own strategy to calculate i
+        return i;
     }
 });
 ```
