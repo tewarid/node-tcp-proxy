@@ -1,12 +1,18 @@
 var proxy = require("node-tcp-proxy");
 var util = require("util");
 
-var serviceHosts = ["www.google.com", "www.bing.com"];
+var serviceHosts = ["apache.org", "apache.org"];
 var servicePorts = [80, 80];
 
 var newProxy = proxy.createProxy(8080, serviceHosts, servicePorts, {
-    upstream: intercept,
-    downstream: intercept,
+    upstream: function(context, data) {
+        log(context.proxySocket, data);
+        return data;
+    },
+    downstream: function(context, data) {
+        log(context.serviceSocket, data);
+        return data;
+    },
     serviceHostSelected: function(proxySocket, i) {
         console.log(util.format("Service host %s:%s selected for client %s:%s.",
             serviceHosts[i],
@@ -18,12 +24,11 @@ var newProxy = proxy.createProxy(8080, serviceHosts, servicePorts, {
     }
 });
 
-function intercept(context, data) {
+function log(socket, data) {
     console.log(util.format("%s:%s sent:",
-        context.proxySocket.remoteAddress,
-        context.proxySocket.remotePort));
+        socket.remoteAddress,
+        socket.remotePort));
     console.log(data);
-    return data;
 }
 
 console.log("Open http://localhost:8080 in the browser.");
