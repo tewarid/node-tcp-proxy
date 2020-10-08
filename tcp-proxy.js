@@ -120,7 +120,6 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
         connected: false,
         proxySocket: proxySocket
     };
-    self.createServiceSocket(context);
     proxySocket.on("data", function(data) {
         if (context.connected) {
             context.serviceSocket.write(
@@ -128,6 +127,9 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
         } else {
             context.buffers[context.buffers.length] =
                 self.intercept(self.options.upstream, context, data);
+            if (context.serviceSocket === undefined) {
+                self.createServiceSocket(context);
+            }
         }
     });
     proxySocket.on("close", function(hadError) {
