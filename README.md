@@ -84,3 +84,13 @@ var newProxy = proxy.createProxy(8080, serviceHosts, servicePorts, {
     }
 });
 ```
+
+## Alternatives
+
+You may want to check out these interesting alternatives
+
+* [http-proxy](https://github.com/http-party/node-http-proxy) - programmable proxying library that supports websockets. It is suitable for implementing components such as reverse proxies and load balancers.
+
+* [sslh](https://github.com/yrutschle/sslh) - accepts connections on specified ports, and forwards them further based on tests performed on the first data packet sent by the remote client.
+
+* [socat](http://www.dest-unreach.org/socat/) - socat is a relay for bidirectional data transfer between two independent data channels. Each of these data channels may be a file, pipe, device (serial line etc. or a pseudo terminal), a socket (UNIX, IP4, IP6 - raw, UDP, TCP), an SSL socket, proxy CONNECT connection, a file descriptor (stdin etc.), the GNU line editor (readline), a program, or a combination of two of these.
