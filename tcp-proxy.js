@@ -134,7 +134,9 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
     });
     proxySocket.on("close", function(hadError) {
         delete self.proxySockets[uniqueKey(proxySocket)];
-        context.serviceSocket.destroy();
+        if (context.serviceSocket !== undefined) {
+            context.serviceSocket.destroy();
+        }
     });
     proxySocket.on("error", function(e) {
         context.serviceSocket.destroy();
