@@ -42,6 +42,7 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
         secureProtocol: "TLSv1_2_method"
     };
     if (this.options.tls) {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         this.proxyTlsOptions.pfx = fs.readFileSync(this.options.pfx);
     }
     this.serviceTlsOptions = {
@@ -114,7 +115,7 @@ TcpProxy.prototype.handleAuth = function(proxySocket) {
 TcpProxy.prototype.handleClient = function(proxySocket) {
     var self = this;
     var key = uniqueKey(proxySocket);
-    self.proxySockets[key] = proxySocket;
+    self.proxySockets[toString(key)] = proxySocket;
     var context = {
         buffers: [],
         connected: false,
@@ -147,8 +148,8 @@ TcpProxy.prototype.createServiceSocket = function(context) {
     var self = this;
     var i = self.getServiceHostIndex(context.proxySocket);
     var options = Object.assign({
-        port: self.servicePorts[i],
-        host: self.serviceHosts[i],
+        port: self.servicePorts[parseInt(i, 10)],
+        host: self.serviceHosts[parseInt(i, 10)],
         localAddress: self.options.localAddress,
         localPort: self.options.localPort
     }, self.serviceTlsOptions);
@@ -190,7 +191,7 @@ TcpProxy.prototype.writeBuffer = function(context) {
     context.connected = true;
     if (context.buffers.length > 0) {
         for (var i = 0; i < context.buffers.length; i++) {
-            context.serviceSocket.write(context.buffers[i]);
+            context.serviceSocket.write(context.buffers[parseInt(i, 10)]);
         }
     }
 };
@@ -198,7 +199,7 @@ TcpProxy.prototype.writeBuffer = function(context) {
 TcpProxy.prototype.end = function() {
     this.server.close();
     for (var key in this.proxySockets) {
-        this.proxySockets[key].destroy();
+        this.proxySockets[toString(key)].destroy();
     }
     this.server.unref();
 };
