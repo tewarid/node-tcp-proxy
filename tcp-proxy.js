@@ -67,20 +67,24 @@ TcpProxy.prototype.createListener = function() {
     var self = this;
     if (self.options.tls) {
         self.server = tls.createServer(self.proxyTlsOptions, function(socket) {
-            self.handleClient(socket);
+            self.handleClientConnection(socket);
         });
     } else {
         self.server = net.createServer(function(socket) {
-            if (self.users) {
-                self.handleAuth(socket);
-            } else {
-                self.handleClient(socket);
-            }
+            self.handleClientConnection(socket);
         });
     }
     self.server.listen(self.proxyPort, self.options.hostname);
 };
 
+TcpProxy.prototype.handleClientConnection = function(socket) {
+    var self = this;
+    if (self.users) {
+        self.handleAuth(socket);
+    } else {
+        self.handleClient(socket);
+    }
+};
 
 // RFC 1413 authentication
 TcpProxy.prototype.handleAuth = function(proxySocket) {
