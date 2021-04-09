@@ -30,13 +30,7 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     this.serviceHosts = parse(serviceHost);
     this.servicePorts = parse(servicePort);
     this.serviceHostIndex = -1;
-    this.options = Object.assign({
-        quiet: false,
-        pfx: require.resolve('./cert.pfx'),
-        passphrase: 'abcd',
-        rejectUnauthorized: true,
-        identUsers: []
-    }, options);
+    this.options = this.parseOptions(options);
     this.proxyTlsOptions = {
         passphrase: this.options.passphrase,
         secureProtocol: "TLSv1_2_method"
@@ -58,6 +52,16 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     }
     this.createListener();
 }
+
+TcpProxy.prototype.parseOptions = function(options) {
+    return Object.assign({
+        quiet: false,
+        pfx: require.resolve('./cert.pfx'),
+        passphrase: 'abcd',
+        rejectUnauthorized: true,
+        identUsers: []
+    }, options);
+};
 
 TcpProxy.prototype.createListener = function() {
     var self = this;
