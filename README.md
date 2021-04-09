@@ -14,9 +14,9 @@ To achieve the same with node-tcp-proxy
 tcpproxy  --proxyPort port [--hostname <name or IP>] --serviceHost host1,host2 --servicePort port1,port2 [--q] [--tls [both]] [--pfx file] [--passphrase secret]
 ```
 
-Optionally, `hostname` specifies the IP address to listen at. Node.js listens on unspecified IPv6 address `::` by default. If `serviceHost` and `servicePort` specify a comma separated list, the proxy will perform load balancing on a round-robin basis.
+Optionally, use `--hostname` to specify host or IP address to listen at. Node.js listens on unspecified IPv6 address `::` by default. If `--serviceHost` and `--servicePort` specify a comma separated list, the proxy will perform load balancing on a round-robin basis.
 
-TLS can be enabled at the proxy port using the `tls` option. If followed by `both`, TLS is also used with the service. Use `pfx` option to specify server certificate, and `passphrase` to provide the password required to access it.
+TLS can be enabled at the proxy port using `--tls`. Use `--pfx` followed by path to specify server certificate, and `--passphrase` to provide the password required to access it. Use `--tls both`, to also enable TLS with the service.
 
 ## npm
 
