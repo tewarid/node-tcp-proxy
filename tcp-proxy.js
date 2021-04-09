@@ -155,13 +155,7 @@ TcpProxy.prototype.handleUpstreamData = function(context, data) {
 
 TcpProxy.prototype.createServiceSocket = function(context) {
     var self = this;
-    var i = self.getServiceHostIndex(context.proxySocket);
-    var options = Object.assign({
-        port: self.servicePorts[parseInt(i, 10)],
-        host: self.serviceHosts[parseInt(i, 10)],
-        localAddress: self.options.localAddress,
-        localPort: self.options.localPort
-    }, self.serviceTlsOptions);
+    var options = self.parseServiceOptions(context);
     if (self.options.tls === "both") {
         context.serviceSocket = tls.connect(options, function() {
             self.writeBuffer(context);
@@ -182,6 +176,17 @@ TcpProxy.prototype.createServiceSocket = function(context) {
     context.serviceSocket.on("error", function(e) {
         context.proxySocket.destroy();
     });
+};
+
+TcpProxy.prototype.parseServiceOptions = function(context) {
+    var self = this;
+    var i = self.getServiceHostIndex(context.proxySocket);
+    return Object.assign({
+        port: self.servicePorts[parseInt(i, 10)],
+        host: self.serviceHosts[parseInt(i, 10)],
+        localAddress: self.options.localAddress,
+        localPort: self.options.localPort
+    }, self.serviceTlsOptions);
 };
 
 TcpProxy.prototype.getServiceHostIndex = function(proxySocket) {
