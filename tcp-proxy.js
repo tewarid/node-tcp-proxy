@@ -50,8 +50,8 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     } else {
         this.log('Allow all users');
     }
-    if (this.options.whiteIPs.length !== 0)
-        this.whiteIPs = this.options.whiteIPs;
+    if (this.options.allowedIPs.length !== 0)
+        this.allowedIPs = this.options.allowedIPs;
     this.createListener();
 }
 
@@ -91,7 +91,7 @@ TcpProxy.prototype.handleClientConnection = function(socket) {
 // RFC 1413 authentication
 TcpProxy.prototype.handleAuth = function(proxySocket) {
     var self = this;
-    if (self.whiteIPs.includes(proxySocket.remoteAddress)) {
+    if (self.allowedIPs.includes(proxySocket.remoteAddress)) {
         self.handleClient(proxySocket);
         return;
     }
