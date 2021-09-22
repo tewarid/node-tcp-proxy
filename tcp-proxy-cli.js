@@ -30,12 +30,15 @@ argv
         "Passphrase to access private key file", "abcd")
     .option("-i, --identUsers [user[,...]]",
         "Comma-separated list of authorized users", "")
+    .option("-A, --allowedIPs [ip1[,...]]",
+        "Comma-separated list of allowed IPs, overrides -i", "")
     .parse(process.argv);
 
 var options = Object.assign(argv, {
     quiet: argv.q,
     rejectUnauthorized: argv.rejectUnauthorized !== "false",
-    identUsers: argv.identUsers === '' ? [] : argv.identUsers.split(',')
+    identUsers: argv.identUsers === '' ? [] : argv.identUsers.split(','),
+    allowedIps: argv.allowedIPs === '' ? [] : argv.allowedIPs.split(',')
 });
 
 if (!argv.proxyPort || !argv.serviceHost || !argv.servicePort) {
