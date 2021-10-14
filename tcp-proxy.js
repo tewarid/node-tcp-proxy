@@ -50,8 +50,9 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     } else {
         this.log('Allow all users');
     }
-    if (this.options.allowedIPs.length !== 0)
+    if (this.options.allowedIPs.length !== 0) {
         this.allowedIPs = this.options.allowedIPs;
+    }
     this.createListener();
 }
 
@@ -61,7 +62,8 @@ TcpProxy.prototype.parseOptions = function(options) {
         pfx: require.resolve('./cert.pfx'),
         passphrase: 'abcd',
         rejectUnauthorized: true,
-        identUsers: []
+        identUsers: [],
+        allowedIPs: []
     }, options);
 };
 
