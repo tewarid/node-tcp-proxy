@@ -131,7 +131,7 @@ TcpProxy.prototype.handleAuth = function(proxySocket) {
 TcpProxy.prototype.handleClient = function(proxySocket) {
     var self = this;
     var key = uniqueKey(proxySocket);
-    self.proxySockets[toString(key)] = proxySocket;
+    self.proxySockets[`${key}`] = proxySocket;
     var context = {
         buffers: [],
         connected: false,
@@ -225,7 +225,7 @@ TcpProxy.prototype.writeBuffer = function(context) {
 TcpProxy.prototype.end = function() {
     this.server.close();
     for (var key in this.proxySockets) {
-        this.proxySockets[toString(key)].destroy();
+        this.proxySockets[`${key}`].destroy();
     }
     this.server.unref();
 };
