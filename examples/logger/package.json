@@ -1,0 +1,16 @@
+{
+  "name": "logger",
+  "version": "1.0.0",
+  "description": "Logger example",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "buffer-replace": "^1.0.0",
+    "node-tcp-proxy": "^0.0.23"
+  }
+}
