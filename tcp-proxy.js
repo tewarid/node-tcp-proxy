@@ -46,9 +46,9 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
     this.proxySockets = {};
     if (this.options.identUsers.length !== 0) {
         this.users = this.options.identUsers;
-        this.log('Only allow these users: '.concat(this.users.join(', ')));
+        this.log('Will only allow these users: '.concat(this.users.join(', ')));
     } else {
-        this.log('Allow all users');
+        this.log('Will allow all users');
     }
     if (this.options.allowedIPs.length !== 0) {
         this.allowedIPs = this.options.allowedIPs;
@@ -58,7 +58,7 @@ function TcpProxy(proxyPort, serviceHost, servicePort, options) {
 
 TcpProxy.prototype.parseOptions = function(options) {
     return Object.assign({
-        quiet: false,
+        quiet: true,
         pfx: require.resolve('./cert.pfx'),
         passphrase: 'abcd',
         rejectUnauthorized: true,
