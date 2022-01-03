@@ -35,7 +35,7 @@ argv
     .parse(process.argv);
 
 var options = Object.assign(argv, {
-    quiet: argv.q,
+    quiet: argv.q === true,
     rejectUnauthorized: argv.rejectUnauthorized !== "false",
     identUsers: argv.identUsers === '' ? [] : argv.identUsers.split(','),
     allowedIps: argv.allowedIPs === '' ? [] : argv.allowedIPs.split(',')
