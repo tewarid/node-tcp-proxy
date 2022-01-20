@@ -147,7 +147,9 @@ TcpProxy.prototype.handleClient = function(proxySocket) {
         }
     });
     proxySocket.on("error", function(e) {
-        context.serviceSocket.destroy();
+        if (context.serviceSocket !== undefined) {
+            context.serviceSocket.destroy();
+        }
     });
 };
 
@@ -184,10 +186,14 @@ TcpProxy.prototype.createServiceSocket = function(context) {
             .then((processedData) => context.proxySocket.write(processedData));
     });
     context.serviceSocket.on("close", function(hadError) {
-        context.proxySocket.destroy();
+        if (context.proxySocket !== undefined) {
+            context.proxySocket.destroy();
+        }
     });
     context.serviceSocket.on("error", function(e) {
-        context.proxySocket.destroy();
+        if (context.proxySocket !== undefined) {
+            context.proxySocket.destroy();
+        }
     });
 };
 
