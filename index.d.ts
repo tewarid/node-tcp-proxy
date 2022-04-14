@@ -47,8 +47,18 @@ interface TcpProxyOptions {
 }
 
 declare class TcpProxy {
-    constructor(proxyPort: number, serviceHost: ServiceHost, servicePort: ServicePort, options?: Partial<TcpProxyOptions>); 
+    constructor(
+        proxyPort: number, 
+        serviceHost: ServiceHost, 
+        servicePort: ServicePort, 
+        options?: Partial<TcpProxyOptions>
+    ); 
     end(): void;
 }
 
-export function createProxy(proxyPort: number, serviceHost: ServiceHost, servicePort: ServicePort, options?: Partial<TcpProxyOptions>): TcpProxy;
+export function createProxy(
+    proxyPort: number, 
+    serviceHost: ServiceHost, 
+    servicePort: ServicePort, 
+    options?: Partial<TcpProxyOptions>
+): TcpProxy;
