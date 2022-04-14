@@ -4,6 +4,7 @@
     "license": "MIT",
     "version": "0.0.26",
     "main": "index.js",
+    "types": "./index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/tewarid/node-tcp-proxy.git"
