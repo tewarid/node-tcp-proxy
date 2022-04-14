@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { TlsSocket } from 'tls';
+import { TLSSocket } from 'tls';
 
 // Name or IP address of service host(s); if this is a list, performs round-robin load balancing
 type ServiceHost = string | string[];
@@ -13,11 +13,11 @@ interface ContextBase {
 }
 
 interface UpstreamContext extends ContextBase {
-    proxySocket: Socket | TlsSocket;
+    proxySocket: Socket | TLSSocket;
 }
 
 interface DownstreamContext  extends ContextBase {
-    serviceSocket: Socket | TlsSocket;
+    serviceSocket: Socket | TLSSocket;
 }
 
 interface TcpProxyOptions {
@@ -41,7 +41,7 @@ interface TcpProxyOptions {
     identUsers: string[];
     // List of allowed IPs
     allowedIPs: string[];
-    serviceHostSelected: (proxySocket: Socket | TlsSocket, i: number) => number;
+    serviceHostSelected: (proxySocket: Socket | TLSSocket, i: number) => number;
     upstream: (context: UpstreamContext, data: Buffer) => Buffer;
     downstream: (context: DownstreamContext, data: Buffer) => Buffer;
 }
