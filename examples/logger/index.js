@@ -29,8 +29,8 @@ var options = {
     },
     serviceHostSelected: function(proxySocket, i) {
         console.log(util.format("Service host %s:%s selected for client %s:%s.",
-            serviceHosts[parseInt(i)],
-            servicePorts[parseInt(i)],
+            serviceHosts[parseInt(i, 10)],
+            servicePorts[parseInt(i, 10)],
             proxySocket.remoteAddress,
             proxySocket.remotePort));
         // use your own strategy to calculate i
