@@ -70,7 +70,7 @@ TcpProxy.prototype.parseOptions = function(options) {
 TcpProxy.prototype.createListener = function() {
     var self = this;
     if (self.options.tls) {
-        self.server = tls.createServer(self.proxyTlsOptions, function(socket) {
+        self.server = tls.createServer(self.options.customTlsOptions || self.proxyTlsOptions, function(socket) {
             self.handleClientConnection(socket);
         });
     } else {

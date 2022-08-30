@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { TLSSocket } from 'tls';
+import { TLSSocket ,TlsOptions} from 'tls';
 
 // Name or IP address of service host(s); if this is a list, performs round-robin load balancing
 type ServiceHost = string | string[];
@@ -41,6 +41,8 @@ interface TcpProxyOptions {
     identUsers: string[];
     // List of allowed IPs
     allowedIPs: string[];
+    // Custom tls server options
+    customTlsOptions: TlsOptions;
     serviceHostSelected: (proxySocket: Socket | TLSSocket, i: number) => number;
     upstream: (context: UpstreamContext, data: Buffer) => Buffer;
     downstream: (context: DownstreamContext, data: Buffer) => Buffer;
