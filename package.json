@@ -2,7 +2,7 @@
     "name": "node-tcp-proxy",
     "description": "A simple TCP proxy built using Node.js",
     "license": "MIT",
-    "version": "0.0.27",
+    "version": "0.0.28",
     "main": "index.js",
     "types": "./index.d.ts",
     "repository": {
